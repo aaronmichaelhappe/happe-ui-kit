@@ -1,8 +1,17 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect } from 'vitest';
+import * as cheerio from 'cheerio';
+const $ = cheerio.load('<h2 class="title">Hello world</h2>');
 
-describe("Pager", () => {
-  let left: any[] = [];
-  let right: any[] = [1, 2, 3, 4, 5];
+console.log($);
 
-  it("", () => {});
+const els: any[] = [];
+els.push($('h2'));
+els.push($('h2'));
+els.push($('h2'));
+
+describe('Pager', () => {
+	it('has html elements are created to work with', () => {
+		expect(els).toHaveLength(3);
+		expect(els[0].hasClass('title')).toBe(true);
+	});
 });

@@ -33,5 +33,10 @@
 		"vite": "^4.0.0",
 		"vitest": "^0.25.3"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"add": "^2.0.6",
+		"cheerio": "^1.0.0-rc.12",
+		"cheerio-create-text-node": "^2.0.0"
+	}
 }
