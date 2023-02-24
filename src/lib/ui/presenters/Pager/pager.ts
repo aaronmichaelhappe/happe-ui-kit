@@ -1,66 +1,50 @@
-import * as Range from 'range-js';
+// export type SlidePage = (
+// 	dir: 'all-left' | 'all-right' | 'inc' | 'dec',
+// 	clickedIndex: number,
+// ) => void;
 
-export type SlidePage = (
-	dir: 'all-left' | 'all-right' | 'inc' | 'dec',
-	clickedIndex: number,
-	className: string | undefined,
-	classNames: string | undefined
-) => void;
-
-// docs
-// pass in opened val and closed val  for both
-// pass in for just opened val (or keep default) for one
-// oass in for just cloased, pass in closed val and empty string for closed val
-export const Pager = (
+export const pager = (
 	slides: HTMLElement[],
-	openedClassName = 'opened',
-	closedClassName = '',
-	startPosition: 'open' | 'closed' = 'open'
-): SlidePage => {
-	const eachStateHasValue = openedClassName === '' || closedClassName === '' ? false : true;
-
-	const addSlideClass = (count: number, className: string) => {
-		slides[count].classList.add(className);
-	};
-	const removeSlideClass = (count: number, className: string) => {
-		slides[count].classList.remove(className);
-	};
+) => {
 
 	return (dir: 'all-left' | 'all-right' | 'inc' | 'dec', clickedIndex: number) => {
-		let count = clickedIndex;
-
+		let index = clickedIndex;
+		const affectedElements: any[] = [];
 		switch (dir) {
-			case 'all-right':
-				while (count < slides.length) {
-					if (startPosition === 'open') {
-						addSlideClass(count, openedClassName);
-						count++;
-						continue;
-					}
-					eachStateHasValue
-						? addSlideClass(count, closedClassName)
-						: removeSlideClass(count, openedClassName);
-
-					count++;
-				}
-				break;
 			case 'all-left':
-				while (count >= 0) {
-					slides[count].classList.add(...appliedClasses);
-					count--;
+				while (index >= 0) {
+					slides[index].classList.remove('closed');
+					affectedElements.push(slides[index]);
+					index--;
+
+					continue;
 				}
 				break;
-			case 'inc':
-				slides[count].classList.remove(...appliedClasses);
-				count++;
-				break;
-			case 'dec':
-				slides[count].classList.add(...appliedClasses);
-				count--;
-				break;
+			case 'all-right':
+				while (index < slides.length) {
+					slides[index].classList.add("closed");
+					console.log('slides[index]', slides[index]);
 
-			default:
+					affectedElements.push(slides[index]);
+					index++;
+
+					continue;
+				}
 				break;
+			// case 'inc':
+
+			// 	// index++;
+			// 	break;
+			// case 'dec':
+
+			// 	// index--;
+			// 	break;
+
+			// default:
+			// 	break;
 		}
+
+		return affectedElements;
 	};
+
 };
