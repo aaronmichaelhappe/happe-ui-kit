@@ -1,5 +1,7 @@
 <script lang="ts">
-	import SlidePage from '$lib/ui/presenters/Pager/Pager.svelte';
+	import { Pager } from '$lib/ui/presenters/Pager/pager';
+
+	const pager = Pager();
 </script>
 
 <svelte:head>
@@ -10,5 +12,5 @@
 <div class="text-column">
 	<h1>Temp UI Page</h1>
 
-	<SlidePage data=['a', 'b', ] />
+	<!-- <SlidePage data=['a', 'b', ] /> -->
 </div>

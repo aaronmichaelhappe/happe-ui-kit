@@ -1,50 +1,79 @@
-// export type SlidePage = (
-// 	dir: 'all-left' | 'all-right' | 'inc' | 'dec',
-// 	clickedIndex: number,
-// ) => void;
+type Page = (dir: 'all-left' | 'all-right' | 'dec' | 'inc', clickedIndex: number) => HTMLElement[];
 
-export const pager = (
-	slides: HTMLElement[],
-) => {
+interface _Pager {
+	page: Page;
+}
 
-	return (dir: 'all-left' | 'all-right' | 'inc' | 'dec', clickedIndex: number) => {
-		let index = clickedIndex;
-		const affectedElements: any[] = [];
-		switch (dir) {
-			case 'all-left':
-				while (index >= 0) {
-					slides[index].classList.remove('closed');
-					affectedElements.push(slides[index]);
-					index--;
+export const Pager = function () {
+	let _slides: HTMLElement[];
+	const _pager = {
+		page(dir: 'all-left' | 'all-right' | 'dec' | 'inc', clickedIndex: number) {
+			let index = clickedIndex;
+			const updatedSlides: HTMLElement[] = [];
 
-					continue;
-				}
-				break;
-			case 'all-right':
-				while (index < slides.length) {
-					slides[index].classList.add("closed");
-					console.log('slides[index]', slides[index]);
+			switch (dir) {
+				case 'all-left':
+					while (index >= 0) {
+						_slides[index].classList.remove('closed');
 
-					affectedElements.push(slides[index]);
+						updatedSlides.push(_slides[index]);
+
+						index--;
+
+						continue;
+					}
+					break;
+				case 'all-right':
+					while (index < _slides.length) {
+						_slides[index].classList.add("closed");
+
+						updatedSlides.push(_slides[index]);
+
+						index++;
+
+						continue;
+					}
+					break;
+
+				case 'dec':
+					if (index < 0) break;
+
+					_slides[index].classList.remove("closed");
+
+					updatedSlides.push(_slides[index]);
+
 					index++;
 
-					continue;
-				}
-				break;
-			// case 'inc':
+					break;
 
-			// 	// index++;
-			// 	break;
-			// case 'dec':
+				case 'inc':
+					if (index >= _slides.length - 1) break;
 
-			// 	// index--;
-			// 	break;
+					_slides[index].classList.add("closed");
 
-			// default:
-			// 	break;
-		}
+					updatedSlides.push(_slides[index]);
 
-		return affectedElements;
+					index++;
+
+					break;
+
+				default:
+					break;
+			}
+
+			return updatedSlides;
+		},
 	};
 
+	const create = function (slides: HTMLElement[]): _Pager {
+		const pager = Object.create(_pager);
+		_slides = slides;
+		return pager;
+	};
+
+	return {
+		create,
+	};
 };
+
+
