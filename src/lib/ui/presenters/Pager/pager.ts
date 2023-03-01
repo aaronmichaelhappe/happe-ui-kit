@@ -1,22 +1,38 @@
-type Page = (dir: 'all-left' | 'all-right' | 'dec' | 'inc', clickedIndex: number) => HTMLElement[];
+type PagedAction = 'all-left' | 'all-right' | 'dec' | 'inc';
 
-interface _Pager {
-	page: Page;
+interface Page<Type> {
+	(dir: PagedAction, clickedIndex: number): Type;
+}
+
+interface _Pager<Type> {
+	page: Page<Type>;
+}
+
+interface WillOpen<Type> { (item: Type): void; };
+interface WillClose<Type> { (item: Type): void; };
+
+interface OnPaged<Type> {
+	willOpen: WillOpen<Type> | null;
+	willClose: WillClose<Type> | null;
 }
 
 export const Pager = function () {
-	let _slides: HTMLElement[];
+	let _items: unknown[];
+	let willOpen: WillOpen<unknown> | null = null;
+	let willClose: WillClose<unknown> | null = null;
+
 	const _pager = {
-		page(dir: 'all-left' | 'all-right' | 'dec' | 'inc', clickedIndex: number) {
+		page(dir: PagedAction, clickedIndex: number) {
 			let index = clickedIndex;
-			const updatedSlides: HTMLElement[] = [];
+			const updatedItems: any[] = [];
 
 			switch (dir) {
 				case 'all-left':
 					while (index >= 0) {
-						_slides[index].classList.remove('closed');
 
-						updatedSlides.push(_slides[index]);
+						if (willOpen !== null) willOpen(_items[index]);
+
+						updatedItems.push(_items[index]);
 
 						index--;
 
@@ -24,10 +40,11 @@ export const Pager = function () {
 					}
 					break;
 				case 'all-right':
-					while (index < _slides.length) {
-						_slides[index].classList.add("closed");
+					while (index < _items.length) {
 
-						updatedSlides.push(_slides[index]);
+						if (willClose !== null) willClose(_items[index]);
+
+						updatedItems.push(_items[index]);
 
 						index++;
 
@@ -38,20 +55,20 @@ export const Pager = function () {
 				case 'dec':
 					if (index < 0) break;
 
-					_slides[index].classList.remove("closed");
+					if (willOpen !== null) willOpen(_items[index]);
 
-					updatedSlides.push(_slides[index]);
+					updatedItems.push(_items[index]);
 
 					index++;
 
 					break;
 
 				case 'inc':
-					if (index >= _slides.length - 1) break;
+					if (index >= _items.length - 1) break;
 
-					_slides[index].classList.add("closed");
+					if (willClose !== null) willClose(_items[index]);
 
-					updatedSlides.push(_slides[index]);
+					updatedItems.push(_items[index]);
 
 					index++;
 
@@ -61,14 +78,17 @@ export const Pager = function () {
 					break;
 			}
 
-			return updatedSlides;
+			return updatedItems;
 		},
 	};
 
-	const create = function (slides: HTMLElement[]): _Pager {
-		const pager = Object.create(_pager);
-		_slides = slides;
-		return pager;
+	const create = function <Type>(items: unknown[], cbs: OnPaged<unknown>): _Pager<Type> {
+
+		_items = items;
+		willOpen = cbs.willOpen;
+		willClose = cbs.willClose;
+
+		return Object.create(_pager);
 	};
 
 	return {
