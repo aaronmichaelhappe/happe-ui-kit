@@ -1,39 +1,47 @@
 <script lang="ts">
 	import classNames from 'classnames';
-
-	export let wrapperClass: undefined | string = undefined;
-	export let itemClass: undefined | string = undefined;
+	export let customWrapperClass: undefined | string = undefined;
+	export let customItemClass: undefined | string = undefined;
 	export let wrappingEl: 'ul' | 'div' = 'ul';
-	export let childEl: 'li' | 'div' = 'li';
+	export let itemEl: 'li' | 'div' = 'li';
 	export let masonry = false;
 	export let items: any[] = [];
 	export let rootElement: HTMLElement;
 
+	// override wrapper class if pass in spec class
+
+	let wrapperClass: undefined | string;
 	if (masonry) wrapperClass = 'masonry';
+	if (customWrapperClass) wrapperClass = customWrapperClass;
 
 	$: elementWrapperClass = wrapperClass
 		? wrapperClass
-		: classNames('flex flex-row flex-auto', $$props.class);
+		: classNames(
+				`${wrappingEl == 'ul' ? 'list' : 'items-wrapper'} flex flex-row flex-auto`,
+				$$props.class
+		  );
 
-	let elementClass: string | undefined;
+	let itemClass: string | undefined;
 
 	$: {
-		elementClass = itemClass ? itemClass : classNames('inline-block mx-4', $$props.class);
-		childEl = wrappingEl == 'ul' ? 'li' : 'div';
+		itemClass = customItemClass
+			? customItemClass
+			: classNames('item inline-block mx-4', $$props.class);
+		itemEl = wrappingEl == 'ul' ? 'li' : 'div';
 	}
 </script>
 
 <svelte:element this={wrappingEl} bind:this={rootElement} class={elementWrapperClass}>
 	{#each items as item, i}
 		<svelte:element
-			this={childEl}
+			this={itemEl}
 			on:click
 			on:change
 			on:keydown
 			on:keyup
 			on:mouseenter
 			on:mouseleave
-			class={elementClass}
+			class={itemClass}
 		>
 			<slot {item} />
 		</svelte:element>
