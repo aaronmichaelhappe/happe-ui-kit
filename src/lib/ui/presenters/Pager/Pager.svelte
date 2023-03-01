@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { pager, type SlidePage } from './pager';
-
 	// let slidePage: SlidePage = Pager();
 	interface PagerData {
 		bgColor: string;

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Pager } from '$lib/ui/presenters/Pager/pager';
+	import { Pager } from '$lib/ui/presenters/Pager/Pager';
 
 	const pager = Pager();
 </script>
