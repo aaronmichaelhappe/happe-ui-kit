@@ -31,7 +31,8 @@
 	}
 </script>
 
-<svelte:element this={wrappingEl} bind:this={rootElement} class={elementWrapperClass}>
+bind:this={rootElement}
+<svelte:element this={wrappingEl} class={elementWrapperClass}>
 	{#each items as item, i}
 		<svelte:element
 			this={itemEl}
@@ -47,4 +48,3 @@
 		</svelte:element>
 	{/each}
 </svelte:element>
-asdf
