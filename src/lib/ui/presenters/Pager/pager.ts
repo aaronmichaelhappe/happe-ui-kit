@@ -66,9 +66,8 @@ export const Pager = function () {
 	};
 
 	const create = function (slides: HTMLElement[]): _Pager {
-		const pager = Object.create(_pager);
 		_slides = slides;
-		return pager;
+		return Object.create(_pager);
 	};
 
 	return {
