@@ -13,59 +13,47 @@
 	import img11 from '$lib/images/dalle-surreal/surreal-11.png';
 	import img12 from '$lib/images/dalle-surreal/surreal-12.png';
 
-	import Masonry from '$lib/ui/presenters/Masonry/Masonry.svelte';
-	import type { MasonaryItems } from '$lib/ui/presenters/Masonry/masonry';
-	import { MasonryInteractiveOverlay } from '$lib/ui/presenters/Masonry/masonry';
-	import { onMount } from 'svelte';
+	import GridLayout from '$lib/ui/presenters/GridLayout/grid-layout.svelte';
 
-	interface DescriptiveMasonaryItems extends MasonaryItems {
-		description: string;
+	interface DescriptiveMasonaryItems {
+		[key: string]: string;
 	}
 
 	let items: DescriptiveMasonaryItems[] = [
-		{ src: img1, index: 0, description: 'surreal image' },
-		{ src: img2, index: 1, description: 'surreal image' },
-		{ src: img3, index: 2, description: 'surreal image' },
-		{ src: img4, index: 3, description: 'surreal image' },
-		{ src: img5, index: 4, description: 'surreal image' },
-		{ src: img6, index: 5, description: 'surreal image' },
-		{ src: img7, index: 6, description: 'surreal image' },
-		{ src: img8, index: 7, description: 'surreal image' },
-		{ src: img9, index: 8, description: 'surreal image' },
-		{ src: img10, index: 9, description: 'surreal image' },
-		{ src: img11, index: 10, description: 'surreal image' },
-		{ src: img12, index: 11, description: 'surreal image' }
+		{ src: img1, description: 'surreal image' },
+		{ src: img2, description: 'surreal image' },
+		{ src: img3, description: 'surreal image' },
+		{ src: img4, description: 'surreal image' },
+		{ src: img5, description: 'surreal image' },
+		{ src: img6, description: 'surreal image' },
+		{ src: img7, description: 'surreal image' },
+		{ src: img8, description: 'surreal image' },
+		{ src: img9, description: 'surreal image' },
+		{ src: img10, description: 'surreal image' },
+		{ src: img11, description: 'surreal image' },
+		{ src: img12, description: 'surreal image' }
 	];
 
-	let masonary: any;
 	let childRoot: any;
-
-	let sizeOpts = new Map();
-	sizeOpts.set('3n', ['wide', 'tall']);
-
-	$: {
-		console.log(childRoot);
-		if (childRoot !== undefined) masonary.create(childRoot, items, sizeOpts);
-	}
-
-	onMount(() => {
-		masonary = MasonryInteractiveOverlay();
-		// MasonryInteractiveOverlay().create(listEl, items, sizeOpts);
-	});
 </script>
 
 <div class="mx-auto container max-w-[1100px]">
 	<h1>sandbox</h1>
-	<Masonry>
+	<GridLayout>
 		<List
 			bind:rootElement={childRoot}
 			{items}
-			masonry={true}
+			gridlayout={true}
 			wrappingEl="div"
-			class="grid "
+			class={`grid relative`}
 			let:item
 		>
-			<div class="card" role="img" aria-label={item.description} />
+			<div
+				role="img"
+				aria-label={item.description}
+				class={`w-full h-auto absolute inset-0`}
+				style={`background-image:url(${item.src})`}
+			/>
 		</List>
-	</Masonry>
+	</GridLayout>
 </div>

@@ -1,21 +1,19 @@
 <script lang="ts">
 	import classNames from 'classnames';
 	export let customWrapperClass: undefined | string = undefined;
-	export let customItemClass: undefined | string = undefined;
+	export let customItemClasses: undefined | string = undefined;
 	export let wrappingEl: 'ul' | 'div' = 'ul';
 	export let itemEl: 'li' | 'div' = 'li';
-	export let masonry = false;
+	export let gridlayout = false;
 	export let items: any[] = [];
 	export let rootElement: HTMLElement;
 
-	// override wrapper class if pass in spec class
+	let wrapperClasses: undefined | string;
+	if (gridlayout) wrapperClasses = 'gridlayout';
+	if (customWrapperClass) wrapperClasses = customWrapperClass;
 
-	let wrapperClass: undefined | string;
-	if (masonry) wrapperClass = 'masonry';
-	if (customWrapperClass) wrapperClass = customWrapperClass;
-
-	$: elementWrapperClass = wrapperClass
-		? wrapperClass
+	$: elementWrapperClass = wrapperClasses
+		? wrapperClasses
 		: classNames(
 				`${wrappingEl == 'ul' ? 'list' : 'items-wrapper'} flex flex-row flex-auto`,
 				$$props.class
@@ -24,25 +22,25 @@
 	let itemClass: string | undefined;
 
 	$: {
-		itemClass = customItemClass
-			? customItemClass
+		itemClass = customItemClasses
+			? customItemClasses
 			: classNames('item inline-block mx-4', $$props.class);
 		itemEl = wrappingEl == 'ul' ? 'li' : 'div';
 	}
 </script>
 
-bind:this={rootElement}
 <svelte:element this={wrappingEl} class={elementWrapperClass}>
 	{#each items as item, i}
 		<svelte:element
 			this={itemEl}
+			bind:this={rootElement}
 			on:click
 			on:change
 			on:keydown
 			on:keyup
 			on:mouseenter
 			on:mouseleave
-			class={itemClass}
+			class={`${itemClass} ${item.type ? item.type : ''}`}
 		>
 			<slot {item} />
 		</svelte:element>
